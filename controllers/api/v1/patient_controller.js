@@ -4,7 +4,8 @@ const Report = require('../../../models/report');
 module.exports.register = async (req, res) => {
 
     console.log('inside patient controller');
-       try {
+    const doctor_id = req.tokenValue;
+    try {
 
         let patient = await Patient.findOne({ phone: req.body.phone });
 
@@ -17,7 +18,7 @@ module.exports.register = async (req, res) => {
                 message: patient
             });
         } else {
-            const doctor_id = req.tokenValue._id;
+            
             patient = await Patient.create({
                 phone: req.body.phone,
                 name: req.body.name,
@@ -40,9 +41,7 @@ module.exports.create_report = async (req, res)=>{
     
     console.log(req.params.id);
     try {
-        
-        console.log(req.tokenValue);
-        const doctor_id = req.tokenValue._id;
+        const doctor_id = req.tokenValue;
         
         const report = await Report.create({
             doctor: doctor_id,
@@ -50,7 +49,6 @@ module.exports.create_report = async (req, res)=>{
             status: req.body.status
         });
 
-        console.log(report);
 
         return res.status(200).json({
             success: true
@@ -69,8 +67,6 @@ module.exports.all_reports = async (req,res) => {
     try {
         
         const reports = Report.find({ "patient": req.params.id });
-
-
         reports.exec(function (err, rep) {
             return res.send(rep);
         })

@@ -27,10 +27,10 @@ const verifyToken = async function (req, res, next) {
         
        let tokenValue = await jwt.verify(req.token, 'hospitalapi');
 
-        console.log(tokenValue);
         if (tokenValue) {
+
             //Next middleware
-            req.tokenValue =tokenValue;
+            req.tokenValue =tokenValue.doctor._id;
             next();
         } else {
             return res.status(500).json({
